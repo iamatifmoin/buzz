@@ -13,8 +13,8 @@ function Topbar(){
                     <p className="text-heading3-bold text-light-1 max-xs;hidden">Buzz</p>
                 
             </Link>
-<div className="flex items-center gap-1">
-    <div className="block md:hidden">
+            <div className="flex items-center gap-1">
+                  <div className="block md:hidden">
         <SignedIn>
             <SignOutButton>
                 <div className="flex cursor-pointer">
@@ -22,7 +22,7 @@ function Topbar(){
             </SignOutButton>
         </SignedIn>
         
-    </div>
+            </div>
    
     <OrganizationSwitcher
           appearance={{
