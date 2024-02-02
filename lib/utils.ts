@@ -18,6 +18,7 @@ export function formatDateString(dateString: string) {
     year: "numeric",
     month: "short",
     day: "numeric",
+    timeZone: "UTC",
   };
 
   const date = new Date(dateString);
