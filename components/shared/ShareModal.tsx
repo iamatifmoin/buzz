@@ -15,10 +15,10 @@ import {
   FacebookIcon,
   WhatsappIcon,
   WhatsappShareButton,
-  LineShareButton,
   LinkedinIcon,
   EmailShareButton,
   EmailIcon,
+  LinkedinShareButton
 } from "next-share";
 import { useToast } from "../ui/use-toast";
 
@@ -44,7 +44,7 @@ export default function ShareModal({ url }: { url: string }) {
                   className='cursor-pointer object-contain'
                 />
       </DialogTrigger>
-      <DialogContent style={{backgroundColor:"white" ,width:"600px"}}  >
+      <DialogContent style={{backgroundColor:"white" ,width:"650px"}}  >
         <DialogHeader>
           <DialogTitle>Share Post</DialogTitle>
           <DialogDescription>
@@ -63,9 +63,10 @@ export default function ShareModal({ url }: { url: string }) {
               <WhatsappShareButton url={url}>
                 <WhatsappIcon size={32} round />
               </WhatsappShareButton>
-              <LineShareButton url={url}>
+              <LinkedinShareButton url={url}>
                 <LinkedinIcon size={32} round />
-              </LineShareButton>
+              </LinkedinShareButton>
+             
               <EmailShareButton url={url}>
                 <EmailIcon size={32} round />
               </EmailShareButton>
