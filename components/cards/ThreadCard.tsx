@@ -3,6 +3,8 @@ import Link from "next/link";
 
 import { formatDateString } from "@/lib/utils";
 import DeleteThread from "../forms/DeleteThread";
+import ShareModal from "../shared/ShareModal";
+import { env } from "process";
 
 interface Props {
   id: string;
@@ -38,6 +40,7 @@ function ThreadCard({
   createdAt,
   comments,
   isComment,
+
 }: Props) {
   return (
     <article
@@ -94,13 +97,8 @@ function ThreadCard({
                   height={24}
                   className='cursor-pointer object-contain'
                 />
-                <Image
-                  src='/assets/share.svg'
-                  alt='heart'
-                  width={24}
-                  height={24}
-                  className='cursor-pointer object-contain'
-                />
+               <ShareModal url={`${env.NEXT_PUBLIC_APP_URL}/thread/${id}`} ></ShareModal>
+               
               </div>
 
               {isComment && comments.length > 0 && (
@@ -108,7 +106,7 @@ function ThreadCard({
                   <p className='mt-1 text-subtle-medium text-gray-1'>
                     {comments.length} repl{comments.length > 1 ? "ies" : "y"}
                   </p>
-                </Link>
+                                  </Link>
               )}
             </div>
           </div>

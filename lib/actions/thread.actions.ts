@@ -69,6 +69,7 @@ export async function createThread({ text, author, communityId, path }: Params
       text,
       author,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
+      createdAt:Date.now(),
     });
 
     // Update User model

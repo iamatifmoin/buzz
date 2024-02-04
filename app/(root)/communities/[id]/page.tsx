@@ -9,6 +9,7 @@ import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
+import Searchbar from "@/components/shared/Searchbar";
 
 async function Page({ params }: { params: { id: string } }) {
   const user = await currentUser();
@@ -27,7 +28,7 @@ async function Page({ params }: { params: { id: string } }) {
         bio={communityDetails.bio}
         type='Community'
       />
-
+      
       <div className='mt-9'>
         <Tabs defaultValue='threads' className='w-full'>
           <TabsList className='tab'>
@@ -85,6 +86,7 @@ async function Page({ params }: { params: { id: string } }) {
           </TabsContent>
         </Tabs>
       </div>
+      
     </section>
   );
 }
