@@ -15,10 +15,10 @@ import {
   FacebookIcon,
   WhatsappIcon,
   WhatsappShareButton,
+  LinkedinShareButton,
   LinkedinIcon,
   EmailShareButton,
   EmailIcon,
-  LinkedinShareButton
 } from "next-share";
 import toast from "react-hot-toast";
 
@@ -38,11 +38,7 @@ export default function ShareModal({ url }: { url: string }) {
           className="cursor-pointer object-contain"
         />
       </DialogTrigger>
-<<<<<<< HEAD
-      <DialogContent style={{backgroundColor:"white" ,width:"650px"}}  >
-=======
       <DialogContent className="bg-white lg:max-w-[650px] md:max-w-[620px] max-w-[480px] rounded-lg">
->>>>>>> 41294bc38a2eb6994c2efd617d0ac0f129a340c3
         <DialogHeader>
           <DialogTitle>Share Post</DialogTitle>
           <DialogDescription>
@@ -66,7 +62,6 @@ export default function ShareModal({ url }: { url: string }) {
               <LinkedinShareButton url={url}>
                 <LinkedinIcon size={32} round />
               </LinkedinShareButton>
-             
               <EmailShareButton url={url}>
                 <EmailIcon size={32} round />
               </EmailShareButton>
