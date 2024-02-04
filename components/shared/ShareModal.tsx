@@ -20,43 +20,39 @@ import {
   EmailShareButton,
   EmailIcon,
 } from "next-share";
-import { useToast } from "../ui/use-toast";
+import toast from "react-hot-toast";
 
 export default function ShareModal({ url }: { url: string }) {
-
-  const { toast } = useToast();
   const copyUrl = async () => {
-   
     navigator.clipboard.writeText(url);
-    toast({
-      title: "Copied!",
-      description: "Url Copied successfully!",
-      className: "bg-green-500",
-    });
+    toast.success("Copied!");
   };
   return (
     <Dialog>
       <DialogTrigger asChild>
-      <Image  src='/assets/share.svg'
-                  alt='share'
-                  width={24}
-                  height={24}
-                  className='cursor-pointer object-contain'
-                />
+        <Image
+          src="/assets/share.svg"
+          alt="share"
+          width={24}
+          height={24}
+          className="cursor-pointer object-contain"
+        />
       </DialogTrigger>
-      <DialogContent style={{backgroundColor:"white" ,width:"600px"}}  >
+      <DialogContent className="bg-white lg:max-w-[650px] md:max-w-[620px] max-w-[480px] rounded-lg">
         <DialogHeader>
           <DialogTitle>Share Post</DialogTitle>
           <DialogDescription>
-            <div className="flex rounded-md border justify-between p-5 mt-5">
-              <strong> {url}</strong>
+            <div className="flex rounded-md border justify-between lg:p-5 lg:mt-5 md:p-4 md:mt-4 p-2 mt-2">
+              <span className="text-small-regular md:text-base-medium">
+                {url}
+              </span>
               <Copy onClick={copyUrl} className="cursor-pointer" />
             </div>
             <div className="flex items-center space-x-5 mt-5">
               <FacebookShareButton
                 url={url}
                 quote={"Threads Post."}
-                hashtag={"#thraeds"}
+                hashtag={"#threads"}
               >
                 <FacebookIcon size={32} round />
               </FacebookShareButton>
