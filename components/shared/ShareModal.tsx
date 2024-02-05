@@ -15,7 +15,7 @@ import {
   FacebookIcon,
   WhatsappIcon,
   WhatsappShareButton,
-  LineShareButton,
+  LinkedinShareButton,
   LinkedinIcon,
   EmailShareButton,
   EmailIcon,
@@ -59,9 +59,9 @@ export default function ShareModal({ url }: { url: string }) {
               <WhatsappShareButton url={url}>
                 <WhatsappIcon size={32} round />
               </WhatsappShareButton>
-              <LineShareButton url={url}>
+              <LinkedinShareButton url={url}>
                 <LinkedinIcon size={32} round />
-              </LineShareButton>
+              </LinkedinShareButton>
               <EmailShareButton url={url}>
                 <EmailIcon size={32} round />
               </EmailShareButton>
