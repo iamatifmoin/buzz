@@ -18,21 +18,19 @@ export function formatDateString(dateString: string) {
     year: "numeric",
     month: "short",
     day: "numeric",
-    timeZone: "UTC"
-    
+    timeZone: "IST",
   };
- 
 
   const date = new Date(dateString);
   const formattedDate = date.toLocaleDateString("en-US", options);
-  const time = date.toLocaleTimeString("en-US",
-  { hour: "numeric",
-  minute: "2-digit",}
-  );
+  const time = date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "IST",
+  });
 
   return `${time} - ${formattedDate}`;
 }
-
 
 // created by chatgpt
 export function formatThreadCount(count: number): string {
