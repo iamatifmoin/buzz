@@ -38,12 +38,12 @@ export default function ShareModal({ url }: { url: string }) {
           className="cursor-pointer object-contain"
         />
       </DialogTrigger>
-      <DialogContent className="bg-white lg:max-w-[650px] md:max-w-[620px] max-w-[480px] rounded-lg">
+      <DialogContent className="bg-white lg:max-w-[650px] md:max-w-[620px] max-w-[400px] rounded-lg">
         <DialogHeader>
           <DialogTitle>Share Post</DialogTitle>
           <DialogDescription>
-            <div className="flex rounded-md border justify-between lg:p-5 lg:mt-5 md:p-4 md:mt-4 p-2 mt-2">
-              <span className="text-small-regular md:text-base-medium">
+            <div className="flex rounded-md border justify-between relative right-5 lg:p-5 lg:mt-5 md:p-4 md:mt-4 p-2 mt-2 sm:right-5 md:right-0">
+              <span className="text-subtle-medium md:text-base-medium">
                 {url}
               </span>
               <Copy onClick={copyUrl} className="cursor-pointer" />
