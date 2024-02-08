@@ -21,21 +21,23 @@ async function page({ params }: { params: { id: string } }) {
   const thread = await fetchThreadById(params.id);
 
   return (
-    <section className='relative'>
+    <section className="relative">
       <div>
         <ThreadCard
           id={thread._id}
           currentUserId={user.id}
+          currentUserObjectId={userInfo._id}
           parentId={thread.parentId}
           content={thread.text}
           author={thread.author}
           community={thread.community}
           createdAt={thread.createdAt}
           comments={thread.children}
+          likedBy={thread.likedBy}
         />
       </div>
 
-      <div className='mt-7'>
+      <div className="mt-7">
         <Comment
           threadId={params.id}
           currentUserImg={user.imageUrl}
@@ -43,12 +45,13 @@ async function page({ params }: { params: { id: string } }) {
         />
       </div>
 
-      <div className='mt-10'>
+      <div className="mt-10">
         {thread.children.map((childItem: any) => (
           <ThreadCard
             key={childItem._id}
             id={childItem._id}
             currentUserId={user.id}
+            currentUserObjectId={userInfo._id}
             parentId={childItem.parentId}
             content={childItem.text}
             author={childItem.author}
@@ -56,6 +59,7 @@ async function page({ params }: { params: { id: string } }) {
             createdAt={childItem.createdAt}
             comments={childItem.children}
             isComment
+            likedBy={childItem.likedBy}
           />
         ))}
       </div>

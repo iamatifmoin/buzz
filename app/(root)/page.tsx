@@ -39,12 +39,14 @@ async function Home({
                 key={post._id}
                 id={post._id}
                 currentUserId={user.id}
+                currentUserObjectId={userInfo._id}
                 parentId={post.parentId}
                 content={post.text}
                 author={post.author}
                 community={post.community}
                 createdAt={post.createdAt}
                 comments={post.children}
+                likedBy={post.likedBy}
               />
             ))}
           </>

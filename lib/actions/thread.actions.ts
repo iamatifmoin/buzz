@@ -49,14 +49,18 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
 }
 
 interface Params {
-  text: string,
-  author: string,
-  communityId: string | null,
-  path: string,
+  text: string;
+  author: string;
+  communityId: string | null;
+  path: string;
 }
 
-export async function createThread({ text, author, communityId, path }: Params
-) {
+export async function createThread({
+  text,
+  author,
+  communityId,
+  path,
+}: Params) {
   try {
     connectToDB();
 
@@ -69,7 +73,7 @@ export async function createThread({ text, author, communityId, path }: Params
       text,
       author,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
-      createdAt:Date.now(),
+      createdAt: Date.now(),
     });
 
     // Update User model
@@ -237,5 +241,49 @@ export async function addCommentToThread(
   } catch (err) {
     console.error("Error while adding comment:", err);
     throw new Error("Unable to add comment");
+  }
+}
+
+interface likeThreadParams {
+  currentUserObjectId: string;
+  threadId: string;
+  // path: string;
+}
+
+export async function likeThread({
+  currentUserObjectId,
+  threadId, // path,
+}: likeThreadParams) {
+  connectToDB();
+  try {
+    const currentThread = await Thread.findById(threadId);
+    const currentUser = await User.findById(currentUserObjectId);
+
+    if (!currentThread) {
+      throw new Error("Thread not found");
+    }
+    if (!currentUser) {
+      throw new Error("User not found");
+    }
+
+    let likeExists = currentThread.likedBy.includes(currentUserObjectId);
+    if (!likeExists) {
+      currentThread.likedBy.push(currentUserObjectId);
+      currentUser.likes.push(threadId);
+      await currentThread.save();
+      await currentUser.save();
+      return "like added";
+    } else {
+      currentThread.likedBy.pull(currentUserObjectId);
+      currentUser.likes.pull(threadId);
+      await currentThread.save();
+      await currentUser.save();
+      return "like removed";
+    }
+
+    // revalidatePath(path);
+  } catch (err) {
+    console.error("Error while liking post:", err);
+    throw new Error("Unable to like post");
   }
 }
