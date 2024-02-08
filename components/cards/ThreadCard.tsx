@@ -99,13 +99,7 @@ function ThreadCard({
                       className="cursor-pointer object-contain"
                     />
                   </Link>
-                  <Image
-                    src="/assets/repost.svg"
-                    alt="heart"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                  />
+                  
                   <ShareModal
                     url={`${env.NEXT_PUBLIC_APP_URL}/thread/${id}`}
                   ></ShareModal>
@@ -116,6 +110,7 @@ function ThreadCard({
                     <p className="mt-1 text-subtle-medium text-gray-1">
                       {comments.length} repl{comments.length > 1 ? "ies" : "y"}
                     </p>
+                 
                   </Link>
                 )}
               </div>
