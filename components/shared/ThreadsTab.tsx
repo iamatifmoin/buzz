@@ -4,6 +4,7 @@ import { fetchCommunityPosts } from "@/lib/actions/community.actions";
 import { fetchUserPosts } from "@/lib/actions/user.actions";
 
 import ThreadCard from "../cards/ThreadCard";
+import { ObjectId } from "mongoose";
 
 interface Result {
   name: string;
@@ -29,6 +30,10 @@ interface Result {
         image: string;
       };
     }[];
+    likedBy: [id:ObjectId];
+
+    currentUserObjectId: ObjectId;
+    
   }[];
 }
 
@@ -58,6 +63,7 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
           key={thread._id}
           id={thread._id}
           currentUserId={currentUserId}
+          currentUserObjectId={thread.currentUserObjectId}
           parentId={thread.parentId}
           content={thread.text}
           author={
@@ -76,6 +82,7 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
           }
           createdAt={thread.createdAt}
           comments={thread.children}
+          likedBy={thread.likedBy}
         />
       ))}
     </section>
