@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react"; // Import useEffect and useState hooks
 
@@ -19,7 +19,9 @@ const Like = ({
   currentThreadObjectId,
 }: LikeProps) => {
   const [likeCount, setLikeCount] = useState(likedBy?.length); // State to track like count
-  const [isLiked, setIsLiked] = useState(likedBy?.includes(currentUserObjectId)); // State to track like status
+  const [isLiked, setIsLiked] = useState(
+    likedBy?.includes(currentUserObjectId)
+  ); // State to track like status
 
   useEffect(() => {
     setLikeCount(likedBy?.length); // Update like count when likedBy prop changes
@@ -30,7 +32,7 @@ const Like = ({
     try {
       // Send the request to the server
       let status = await likeThread({
-        currentUserObjectId:JSON.parse(JSON.stringify(currentUserObjectId)),
+        currentUserObjectId: JSON.parse(JSON.stringify(currentUserObjectId)),
         threadId: currentThreadObjectId,
       });
 
@@ -51,13 +53,16 @@ const Like = ({
   };
 
   return (
-    <div onClick={likeCurrentThread} style={{ display: "flex", alignItems: "center" }}>
+    <div onClick={likeCurrentThread} className="flex items-center">
       {isLiked ? (
         <Heart width={24} height={24} style={{ color: "red", fill: "red" }} />
       ) : (
         <Heart width={22} height={22} style={{ color: "gray" }} />
       )}
-      <span style={{ marginLeft: "10px" ,color:"white" }}>{likeCount}{likeCount ==1?(' like'):(' likes')}</span>
+      <span className="ml-[10px] text-light-1">
+        {likeCount}
+        {likeCount == 1 ? " like" : " likes"}
+      </span>
     </div>
   );
 };

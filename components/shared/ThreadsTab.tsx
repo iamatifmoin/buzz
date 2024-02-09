@@ -30,10 +30,8 @@ interface Result {
         image: string;
       };
     }[];
-    likedBy: [id:ObjectId];
-
+    likedBy: [id: ObjectId];
     currentUserObjectId: ObjectId;
-    
   }[];
 }
 
@@ -41,9 +39,15 @@ interface Props {
   currentUserId: string;
   accountId: string;
   accountType: string;
+  currentUserObjectId: ObjectId;
 }
 
-async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
+async function ThreadsTab({
+  currentUserId,
+  currentUserObjectId,
+  accountId,
+  accountType,
+}: Props) {
   let result: Result;
 
   if (accountType === "Community") {
@@ -57,13 +61,13 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
   }
 
   return (
-    <section className='mt-9 flex flex-col gap-10'>
+    <section className="mt-9 flex flex-col gap-10">
       {result.threads.map((thread) => (
         <ThreadCard
           key={thread._id}
           id={thread._id}
           currentUserId={currentUserId}
-          currentUserObjectId={thread.currentUserObjectId}
+          currentUserObjectId={currentUserObjectId}
           parentId={thread.parentId}
           content={thread.text}
           author={
