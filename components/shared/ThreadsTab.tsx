@@ -32,6 +32,7 @@ interface Result {
     }[];
     likedBy: [id: ObjectId];
     currentUserObjectId: ObjectId;
+    imgSrc: string;
   }[];
 }
 
@@ -87,6 +88,7 @@ async function ThreadsTab({
           createdAt={thread.createdAt}
           comments={thread.children}
           likedBy={thread.likedBy}
+          imgSrc={thread.imgSrc}
         />
       ))}
     </section>

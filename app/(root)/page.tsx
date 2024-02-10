@@ -47,6 +47,7 @@ async function Home({
                 createdAt={post.createdAt}
                 comments={post.children}
                 likedBy={post.likedBy}
+                imgSrc={post.imgSrc}
               />
             ))}
           </>

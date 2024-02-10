@@ -34,6 +34,7 @@ async function page({ params }: { params: { id: string } }) {
           createdAt={thread.createdAt}
           comments={thread.children}
           likedBy={thread.likedBy}
+          imgSrc={thread.imgSrc}
         />
       </div>
 

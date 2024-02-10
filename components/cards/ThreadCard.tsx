@@ -32,6 +32,7 @@ interface Props {
   }[];
   isComment?: boolean;
   likedBy: [id: ObjectId];
+  imgSrc?: string;
 }
 
 function ThreadCard({
@@ -46,6 +47,7 @@ function ThreadCard({
   comments,
   isComment,
   likedBy,
+  imgSrc,
 }: Props) {
   return (
     <>
@@ -78,8 +80,23 @@ function ThreadCard({
                   {author.name}
                 </h4>
               </Link>
+              <div className="mt-4">
+                {imgSrc && (
+                  <Image
+                    unoptimized={true}
+                    src={imgSrc}
+                    alt="post image"
+                    width={300}
+                    height={300}
+                    className="object-contain w-full"
+                    priority
+                  />
+                )}
 
-              <p className="mt-2 text-small-regular text-light-2">{content}</p>
+                <p className="mt-2 text-small-regular text-light-2">
+                  {content}
+                </p>
+              </div>
 
               <div
                 className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}
@@ -99,7 +116,7 @@ function ThreadCard({
                       className="cursor-pointer object-contain"
                     />
                   </Link>
-                  
+
                   <ShareModal
                     url={`${env.NEXT_PUBLIC_APP_URL}/thread/${id}`}
                   ></ShareModal>
@@ -110,7 +127,6 @@ function ThreadCard({
                     <p className="mt-1 text-subtle-medium text-gray-1">
                       {comments.length} repl{comments.length > 1 ? "ies" : "y"}
                     </p>
-                 
                   </Link>
                 )}
               </div>

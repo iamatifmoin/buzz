@@ -34,6 +34,9 @@ const threadSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  imgSrc: {
+    type: String,
+  },
 });
 
 const Thread = mongoose.models.Thread || mongoose.model("Thread", threadSchema);

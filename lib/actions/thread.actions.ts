@@ -53,6 +53,7 @@ interface Params {
   author: string;
   communityId: string | null;
   path: string;
+  imgSrc: string;
 }
 
 export async function createThread({
@@ -60,6 +61,7 @@ export async function createThread({
   author,
   communityId,
   path,
+  imgSrc,
 }: Params) {
   try {
     connectToDB();
@@ -73,6 +75,7 @@ export async function createThread({
       text,
       author,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
+      imgSrc: imgSrc,
       createdAt: Date.now(),
     });
 
