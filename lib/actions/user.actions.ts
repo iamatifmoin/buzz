@@ -1,6 +1,6 @@
 "use server";
 
-import { FilterQuery, SortOrder } from "mongoose";
+import { FilterQuery, ObjectId, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
 
 import Community from "../models/community.model";
@@ -87,6 +87,7 @@ export async function fetchUserPosts(userId: string) {
         },
       ],
     });
+    // console.log(threads);
     return threads;
   } catch (error) {
     console.error("Error fetching user threads:", error);
@@ -174,6 +175,59 @@ export async function getActivity(userId: string) {
       model: User,
       select: "name image _id",
     });
+
+    return replies;
+  } catch (error) {
+    console.error("Error fetching replies: ", error);
+    throw error;
+  }
+}
+
+export async function fetchUserReplies(userId: string) {
+  try {
+    connectToDB();
+    let user = await User.findOne({ id: userId });
+    const allThreads = await Thread.find({});
+    const userThreads = await Thread.find({
+      author: { $in: user._id },
+    });
+
+    let userThreadIds: ObjectId[] = [];
+    userThreads.map((userThread) => {
+      userThreadIds.push(userThread._id);
+    });
+
+    user.threads = allThreads;
+
+    const replies = user
+      .populate({
+        path: "threads",
+        model: Thread,
+        match: {
+          children: {
+            $elemMatch: {
+              $in: userThreadIds,
+            },
+          },
+        },
+        populate: [
+          {
+            path: "community",
+            model: Community,
+            select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+          },
+          {
+            path: "children",
+            model: Thread,
+            populate: {
+              path: "author",
+              model: User,
+              select: "name image id", // Select the "name" and "_id" fields from the "User" model
+            },
+          },
+        ],
+      })
+      .then();
 
     return replies;
   } catch (error) {
