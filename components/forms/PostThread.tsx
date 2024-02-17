@@ -51,7 +51,7 @@ function PostThread({ userId }: Props) {
       author: userId,
       communityId: organization ? organization.id : null,
       path: pathname,
-      imgSrc: imgRes && imgRes[0].fileUrl ? imgRes[0].fileUrl : "",
+      imgSrc: imgRes && imgRes[0]?.fileUrl ? imgRes[0].fileUrl : "",
     });
 
     router.push("/");
