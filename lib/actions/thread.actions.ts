@@ -7,6 +7,7 @@ import { connectToDB } from "../mongoose";
 import User from "../models/user.model";
 import Thread from "../models/thread.model";
 import Community from "../models/community.model";
+import { ObjectId } from "mongoose";
 
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   connectToDB();
@@ -53,6 +54,7 @@ interface Params {
   author: string;
   communityId: string | null;
   path: string;
+  tags: ObjectId[] | null;
   imgSrc: string;
 }
 
@@ -61,6 +63,7 @@ export async function createThread({
   author,
   communityId,
   path,
+  tags,
   imgSrc,
 }: Params) {
   try {
@@ -75,6 +78,7 @@ export async function createThread({
       text,
       author,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
+      tags,
       imgSrc: imgSrc,
       createdAt: Date.now(),
     });

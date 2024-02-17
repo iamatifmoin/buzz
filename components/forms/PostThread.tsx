@@ -15,25 +15,34 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 
 import { ThreadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
 import { Input } from "../ui/input";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useUploadThing } from "@/lib/uploadthing";
+import { Mention, MentionsInput } from "react-mentions";
+import defaultStyle from "../../constants/defaultStyle";
+import defaultMentionStyle from "../../constants/defaultMentionStyle";
+import { fetchAllUsers, fetchUser } from "@/lib/actions/user.actions";
+import { ObjectId } from "mongoose";
 
 interface Props {
   userId: string;
 }
 
 function PostThread({ userId }: Props) {
+  const onAdd = async (e: any) => {
+    users.map((user) => user.id == e && setTags((prev) => prev + user._id));
+  };
   const router = useRouter();
   const pathname = usePathname();
 
   const { organization } = useOrganization();
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing("media");
+  const [allUsersArray, setAllUsersArray] = useState<Object[]>([]);
+  const [tags, setTags] = useState<ObjectId[]>([]);
 
   const form = useForm<z.infer<typeof ThreadValidation>>({
     resolver: zodResolver(ThreadValidation),
@@ -47,10 +56,11 @@ function PostThread({ userId }: Props) {
     const imgRes = await startUpload(files);
 
     await createThread({
-      text: values.thread,
+      text: values.thread + values.thread.match(/[^(]+(?=\))/g),
       author: userId,
       communityId: organization ? organization.id : null,
       path: pathname,
+      tags: tags ? tags : null,
       imgSrc: imgRes && imgRes[0]?.fileUrl ? imgRes[0].fileUrl : "",
     });
 
@@ -80,6 +90,40 @@ function PostThread({ userId }: Props) {
     }
   };
 
+  let users: Object[] = [];
+
+  const fetchUsersQuery = (query: any, callback: any) => {
+    if (!query) return;
+
+    setTimeout(() => {
+      const filteredUsers = users.filter((currentUser) =>
+        currentUser.display.toLowerCase().includes(query)
+      );
+      callback(filteredUsers);
+    }, 2000);
+  };
+
+  let allUsers: Object[] = [];
+
+  useEffect(() => {
+    async function fetchUsers() {
+      allUsers = await fetchAllUsers();
+      setAllUsersArray(allUsers);
+    }
+    fetchUsers();
+  }, []);
+
+  allUsersArray.map((currentUser) =>
+    users.push(
+      new Object({
+        _id: currentUser._id,
+        id: currentUser.id,
+        display: currentUser.username,
+      })
+    )
+  );
+  console.log(users);
+
   return (
     <Form {...form}>
       <form
@@ -107,8 +151,23 @@ function PostThread({ userId }: Props) {
               <FormLabel className="text-base-semibold text-light-2">
                 Text / Caption
               </FormLabel>
-              <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
-                <Textarea rows={7} {...field} />
+              <FormControl className="no-focus border border-dark-4 bg-dark-3 text-dark-1">
+                <MentionsInput
+                  // singleLine
+                  // value={value}
+                  // onChange={onChange}
+                  placeholder={"Mention people using '@'"}
+                  a11ySuggestionsListLabel={"Suggested mentions"}
+                  style={defaultStyle}
+                  {...field}
+                >
+                  <Mention
+                    data={fetchUsersQuery}
+                    onAdd={onAdd}
+                    style={defaultMentionStyle}
+                    appendSpaceOnAdd
+                  />
+                </MentionsInput>
               </FormControl>
               <FormMessage />
             </FormItem>

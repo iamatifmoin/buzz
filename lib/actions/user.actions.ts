@@ -235,3 +235,14 @@ export async function fetchUserReplies(userId: string) {
     throw error;
   }
 }
+
+export async function fetchAllUsers() {
+  try {
+    connectToDB();
+    let users = await User.find({});
+    return users;
+  } catch (error) {
+    console.error("Error fetching replies: ", error);
+    throw error;
+  }
+}

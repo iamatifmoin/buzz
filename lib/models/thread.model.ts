@@ -34,6 +34,12 @@ const threadSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  tags: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   imgSrc: {
     type: String,
   },
