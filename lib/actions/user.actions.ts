@@ -182,6 +182,16 @@ export async function getActivity(userId: string) {
     throw error;
   }
 }
+export async function fetchAllUsers() {
+  try {
+    connectToDB();
+    let users = await User.find({});
+    return users;
+  } catch (error) {
+    console.error("Error fetching replies: ", error);
+    throw error;
+  }
+}
 
 export async function fetchUserReplies(userId: string) {
   try {
@@ -236,13 +246,17 @@ export async function fetchUserReplies(userId: string) {
   }
 }
 
-export async function fetchAllUsers() {
+
+export async function fetchTaggedThreads(currentUserId: string) {
   try {
-    connectToDB();
-    let users = await User.find({});
-    return users;
+    connectToDB(); // Connect to the database
+
+    // Find threads where the tags array contains the currentUserId
+    const taggedThreads = await Thread.find({ tags: currentUserId });
+
+    return taggedThreads;
   } catch (error) {
-    console.error("Error fetching replies: ", error);
+    console.error('Error fetching tagged threads: ', error);
     throw error;
   }
 }

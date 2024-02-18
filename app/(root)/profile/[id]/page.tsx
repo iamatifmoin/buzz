@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { fetchUser } from "@/lib/actions/user.actions";
 import RepliesTab from "@/components/shared/RepliesTab";
+import TaggedTab from "@/components/shared/TaggedTab";
 
 async function Page({ params }: { params: { id: string } }) {
   const user = await currentUser();
@@ -73,6 +74,15 @@ async function Page({ params }: { params: { id: string } }) {
                   accountType="User"
                 />
               )}
+                {tab.label === "Tagged" && (
+                <TaggedTab
+                  currentUserId={user.id}
+                  currentUserObjectId={userInfo._id}
+                  accountId={userInfo.id}
+                  accountType="User"
+                />
+              )}
+
             </TabsContent>
           ))}
         </Tabs>
