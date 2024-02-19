@@ -32,11 +32,10 @@ interface Props {
 }
 
 function PostThread({ userId }: Props) {
-
   const onAdd = async (e: any) => {
     const userId = e; // Assuming e contains the user ID being tagged
     const user = users.find((user) => user.id === userId); // Find the user object based on the user ID
-  
+
     if (user) {
       setTags((prevTags) => [...prevTags, user._id]); // Add the user's _id to the tags array
     }
@@ -61,26 +60,27 @@ function PostThread({ userId }: Props) {
 
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
     const imgRes = await startUpload(files);
-  
+
     const { thread } = values;
-  
-    
+
     // Extract user IDs and usernames from thread text using regular expression
     const pattern = /@\[([^\]]+)\]\(([^)]+)\)/g;
     let match;
     let textWithoutMentions = thread; // Initialize text without mentions with the original thread text
-  
+
     while ((match = pattern.exec(thread)) !== null) {
-     
       const username = match[1];
 
-     // Replace mention with username
-      textWithoutMentions = textWithoutMentions.replace(match[0],`@${username}`);
+      // Replace mention with username
+      textWithoutMentions = textWithoutMentions.replace(
+        match[0],
+        `@${username}`
+      );
     }
-  
+
     // Trim text without mentions to remove extra spaces
     textWithoutMentions = textWithoutMentions.trim();
-  
+
     await createThread({
       text: textWithoutMentions,
       author: userId,
@@ -89,11 +89,10 @@ function PostThread({ userId }: Props) {
       tags: tags ? tags : null,
       imgSrc: imgRes && imgRes[0]?.fileUrl ? imgRes[0].fileUrl : "",
     });
-  
+
     router.push("/");
   };
-  
-  
+
   const handleImage = (
     e: ChangeEvent<HTMLInputElement>
     // fieldChange: (value: string) => void
@@ -118,8 +117,6 @@ function PostThread({ userId }: Props) {
   };
 
   let users: Object[] = [];
-
-    
 
   const fetchUsersQuery = (query: any, callback: any) => {
     if (!query) return;
@@ -151,7 +148,6 @@ function PostThread({ userId }: Props) {
       })
     )
   );
-  console.log(users);
 
   return (
     <Form {...form}>

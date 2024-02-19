@@ -87,7 +87,6 @@ export async function fetchUserPosts(userId: string) {
         },
       ],
     });
-    // console.log(threads);
     return threads;
   } catch (error) {
     console.error("Error fetching user threads:", error);
@@ -246,17 +245,46 @@ export async function fetchUserReplies(userId: string) {
   }
 }
 
-
-export async function fetchTaggedThreads(currentUserId: string) {
+export async function fetchTaggedThreads(userId: string) {
   try {
-    connectToDB(); // Connect to the database
+    connectToDB();
+    let user = await User.findOne({ id: userId });
+    const allThreads = await Thread.find({});
+    user.threads = allThreads;
 
-    // Find threads where the tags array contains the currentUserId
-    const taggedThreads = await Thread.find({ tags: currentUserId });
+    const tagged = user
+      .populate({
+        path: "threads",
+        model: Thread,
+        match: {
+          tags: {
+            $elemMatch: {
+              $in: user._id,
+            },
+          },
+        },
+        populate: [
+          {
+            path: "community",
+            model: Community,
+            select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+          },
+          {
+            path: "children",
+            model: Thread,
+            populate: {
+              path: "author",
+              model: User,
+              select: "name image id", // Select the "name" and "_id" fields from the "User" model
+            },
+          },
+        ],
+      })
+      .then();
 
-    return taggedThreads;
+    return tagged;
   } catch (error) {
-    console.error('Error fetching tagged threads: ', error);
+    console.error("Error fetching replies: ", error);
     throw error;
   }
 }

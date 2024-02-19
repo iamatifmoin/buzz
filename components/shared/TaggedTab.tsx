@@ -1,61 +1,70 @@
-"use client"
-import { useEffect, useState } from 'react';
-import { redirect } from 'next/navigation';
-import { fetchTaggedThreads } from '@/lib/actions/user.actions';
-import ThreadCard from '../cards/ThreadCard';
-import { ObjectId } from 'mongoose';
+import { redirect } from "next/navigation";
 
-interface Thread {
-  _id: string;
-  text: string;
-  parentId: string | null;
-  author: {
-    name: string;
-    image: string;
-    id: string;
-  };
-  community: {
-    id: string;
-    name: string;
-    image: string;
-  } | null;
-  createdAt: string;
-  children: {
+import { fetchCommunityPosts } from "@/lib/actions/community.actions";
+import { fetchTaggedThreads } from "@/lib/actions/user.actions";
+
+import ThreadCard from "../cards/ThreadCard";
+import { ObjectId } from "mongoose";
+
+interface Result {
+  name: string;
+  image: string;
+  id: string;
+  threads: {
+    _id: string;
+    text: string;
+    parentId: string | null;
     author: {
+      name: string;
       image: string;
+      id: string;
     };
+    community: {
+      id: string;
+      name: string;
+      image: string;
+    } | null;
+    createdAt: string;
+    children: {
+      author: {
+        image: string;
+      };
+    }[];
+    likedBy: [id: ObjectId];
+    currentUserObjectId: ObjectId;
+    imgSrc: string;
   }[];
-  likedBy: [id:ObjectId]; // Changed likedBy type to ObjectId[]
-  currentUserObjectId: ObjectId;
-  imgSrc: string;
 }
 
 interface Props {
   currentUserId: string;
+  accountId: string;
+  accountType: string;
   currentUserObjectId: ObjectId;
 }
 
-const TaggedTab = ({ currentUserId, currentUserObjectId }: Props) => {
-  const [taggedThreads, setTaggedThreads] = useState<Thread[]>([]);
+async function TaggedTab({
+  currentUserId,
+  currentUserObjectId,
+  accountId,
+  accountType,
+}: Props) {
+  let result: Result;
 
-  useEffect(() => {
-    const fetchTaggedThreadsData = async () => {
-      try {
-        const taggedThreads = await fetchTaggedThreads(currentUserId);
-        setTaggedThreads(taggedThreads);
-      } catch (error) {
-        console.error('Error fetching tagged threads: ', error);
-        redirect('/'); // Redirect to homepage or handle error appropriately
-      }
-    };
+  if (accountType === "Community") {
+    result = await fetchCommunityPosts(accountId);
+  } else {
+    result = await fetchTaggedThreads(accountId);
+  }
 
-    fetchTaggedThreadsData();
-  }, [currentUserId]);
+  if (!result) {
+    redirect("/");
+  }
 
   return (
     <section className="mt-9 flex flex-col gap-10">
-      {taggedThreads.length > 0 ? (
-        taggedThreads.map((thread) => (
+      {result && result.threads?.length > 0 ? (
+        result.threads.map((thread) => (
           <ThreadCard
             key={thread._id}
             id={thread._id}
@@ -63,19 +72,31 @@ const TaggedTab = ({ currentUserId, currentUserObjectId }: Props) => {
             currentUserObjectId={currentUserObjectId}
             parentId={thread.parentId}
             content={thread.text}
-            author={{ name: thread.author.name, image: thread.author.image, id: thread.author.id }}
-            community={thread.community}
+            author={
+              accountType === "User"
+                ? { name: result.name, image: result.image, id: result.id }
+                : {
+                    name: thread.author.name,
+                    image: thread.author.image,
+                    id: thread.author.id,
+                  }
+            }
+            community={
+              accountType === "Community"
+                ? { name: result.name, id: result.id, image: result.image }
+                : thread.community
+            }
             createdAt={thread.createdAt}
             comments={thread.children}
-            likedBy={thread.likedBy} // No need to change here, assuming likedBy is already ObjectId[]
+            likedBy={thread.likedBy}
             imgSrc={thread.imgSrc}
           />
         ))
       ) : (
-        <div>No Tagged Threads Found</div>
+        <div>No Replies Found</div>
       )}
     </section>
   );
-};
+}
 
 export default TaggedTab;
