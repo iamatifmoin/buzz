@@ -325,3 +325,24 @@ export async function addCommunityRequest(communityId: string, userId: string) {
     throw false;
   }
 }
+
+export async function rejectCommunityRequest(
+  communityId: string,
+  userId: string
+) {
+  try {
+    connectToDB();
+    const user = await User.findOne({ id: userId });
+    await Community.updateOne(
+      { id: communityId },
+      { $pull: { requests: { $in: user._id } } }
+    );
+    const comm = await Community.findOne({ id: communityId });
+    console.log(comm);
+    return true;
+    // } else return false;
+  } catch (error) {
+    console.error("Error sending join request: ", error);
+    throw false;
+  }
+}

@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "../ui/button";
 import RequestModal from "../shared/RequestModal";
+import AllowAccess from "../shared/AllowAccess";
 
 interface Props {
   id: string;
@@ -14,6 +15,7 @@ interface Props {
   imgUrl: string;
   personType: string;
   btnText: string;
+  isAdmin: boolean;
 }
 
 function UserCard({
@@ -24,10 +26,13 @@ function UserCard({
   imgUrl,
   personType,
   btnText,
+  isAdmin,
 }: Props) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const isCommunity = personType === "Community";
+  const communityId = pathname.split("/").pop();
 
   return (
     <article className="user-card">
@@ -65,14 +70,18 @@ function UserCard({
           ></RequestModal>
         )
       ) : (
-        <Button
-          className="user-card_btn"
-          onClick={() => {
-            router.push(`/profile/${id}`);
-          }}
-        >
-          {btnText}
-        </Button>
+        <>
+          <Button
+            className="user-card_btn"
+            onClick={() => {
+              router.push(`/profile/${id}`);
+            }}
+          >
+            {btnText}
+          </Button>
+
+          {isAdmin && <AllowAccess communityId={communityId} userId={id} />}
+        </>
       )}
     </article>
   );
