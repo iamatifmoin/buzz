@@ -15,6 +15,9 @@ async function Page({ params }: { params: { id: string } }) {
   if (!user) return null;
 
   const communityDetails = await fetchCommunityDetails(params.id);
+  let isAdmin;
+  if (communityDetails.createdBy.id === user.id) isAdmin = true;
+  else isAdmin = false;
 
   return (
     <section>
@@ -66,22 +69,37 @@ async function Page({ params }: { params: { id: string } }) {
                 <UserCard
                   key={member.id}
                   id={member.id}
+                  userEmail={user.emailAddresses[0].emailAddress}
                   name={member.name}
                   username={member.username}
                   imgUrl={member.image}
                   personType="User"
+                  btnText="View"
                 />
               ))}
             </section>
           </TabsContent>
 
-          <TabsContent value="requests" className="w-full text-light-1">
-            {/* @ts-ignore */}
-            <ThreadsTab
-              currentUserId={user.id}
-              accountId={communityDetails._id}
-              accountType="Community"
-            />
+          <TabsContent value="requests" className="mt-9 w-full text-light-1">
+            <section className="mt-9 flex flex-col gap-10">
+              {communityDetails.requests.length > 0 ? (
+                communityDetails.requests.map((member: any) => (
+                  <UserCard
+                    key={member.id}
+                    id={member.id}
+                    userEmail={user.emailAddresses[0].emailAddress}
+                    name={member.name}
+                    username={member.username}
+                    imgUrl={member.image}
+                    personType="User"
+                    btnText="View"
+                    isAdmin={isAdmin}
+                  />
+                ))
+              ) : (
+                <div>No Requests Found</div>
+              )}
+            </section>
           </TabsContent>
         </Tabs>
       </div>

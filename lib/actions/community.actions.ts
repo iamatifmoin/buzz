@@ -7,6 +7,7 @@ import Thread from "../models/thread.model";
 import User from "../models/user.model";
 
 import { connectToDB } from "../mongoose";
+import { currentUser } from "@clerk/nextjs";
 
 export async function createCommunity(
   id: string,
@@ -57,6 +58,11 @@ export async function fetchCommunityDetails(id: string) {
       "createdBy",
       {
         path: "members",
+        model: User,
+        select: "name username image _id id",
+      },
+      {
+        path: "requests",
         model: User,
         select: "name username image _id id",
       },
@@ -300,5 +306,43 @@ export async function deleteCommunity(communityId: string) {
   } catch (error) {
     console.error("Error deleting community: ", error);
     throw error;
+  }
+}
+
+export async function addCommunityRequest(communityId: string, userId: string) {
+  try {
+    connectToDB();
+    const community = await Community.findOne({ id: communityId });
+    const clerkUser = await currentUser();
+    const user = await User.findOne({ id: clerkUser?.id });
+    if (!community.requests.includes(user._id)) {
+      community.requests.push(user._id);
+      community.save();
+      return true;
+    } else return "already sent";
+  } catch (error) {
+    console.error("Error sending join request: ", error);
+    throw false;
+  }
+}
+
+export async function rejectCommunityRequest(
+  communityId: string,
+  userId: string
+) {
+  try {
+    connectToDB();
+    const user = await User.findOne({ id: userId });
+    await Community.updateOne(
+      { id: communityId },
+      { $pull: { requests: { $in: user._id } } }
+    );
+    const comm = await Community.findOne({ id: communityId });
+    console.log(comm);
+    return true;
+    // } else return false;
+  } catch (error) {
+    console.error("Error sending join request: ", error);
+    throw false;
   }
 }

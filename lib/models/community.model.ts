@@ -32,6 +32,12 @@ const communitySchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  requests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const Community =
