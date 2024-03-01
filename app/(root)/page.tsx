@@ -6,7 +6,6 @@ import Pagination from "@/components/shared/Pagination";
 
 import { fetchPosts } from "@/lib/actions/thread.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
-import { Toaster } from "react-hot-toast";
 
 async function Home({
   searchParams,
@@ -27,7 +26,6 @@ async function Home({
   return (
     <>
       {/* <h1 className='head-text text-left'>Home</h1> */}
-      <Toaster />
 
       <section className="mt-2 flex flex-col gap-10">
         {result.posts.length === 0 ? (
