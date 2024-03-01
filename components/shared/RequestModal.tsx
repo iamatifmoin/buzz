@@ -40,7 +40,7 @@ export default function RequestModal({
           </DialogTitle>
           {/* <DialogTitle>Email</DialogTitle> */}
           <DialogDescription>
-            <div className="flex rounded-md border justify-between relative right-5 lg:p-5 lg:mt-5 md:p-4 md:mt-4 p-2 mt-2 sm:right-5 md:right-0">
+            <div className="flex rounded-md border justify-between lg:p-5 lg:mt-5 md:p-4 md:mt-4 p-2 mt-2">
               <span className="text-subtle-medium md:text-base-medium">
                 {userEmail}
               </span>
