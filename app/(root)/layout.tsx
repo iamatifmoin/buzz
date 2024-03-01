@@ -9,7 +9,7 @@ import LeftSidebar from "@/components/shared/LeftSidebar";
 import Bottombar from "@/components/shared/Bottombar";
 import RightSidebar from "@/components/shared/RightSidebar";
 import Topbar from "@/components/shared/Topbar";
-
+import { Toaster } from "react-hot-toast"
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -28,8 +28,10 @@ export default function RootLayout({
         baseTheme: dark,
       }}
     >
+         
       <html lang='en'>
         <body className={inter.className}>
+             <Toaster />
           <Topbar />
 
           <main className='flex flex-row'>
