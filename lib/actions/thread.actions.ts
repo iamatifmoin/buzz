@@ -16,7 +16,10 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   const skipAmount = (pageNumber - 1) * pageSize;
 
   // Create a query to fetch the posts that have no parent (top-level threads) (a thread that is not a comment/reply).
-  const postsQuery = Thread.find({ parentId: { $in: [null, undefined] } })
+  const postsQuery = Thread.find({
+    parentId: { $in: [null, undefined] },
+    community: null,
+  })
     .sort({ createdAt: "desc" })
     .skip(skipAmount)
     .limit(pageSize)
@@ -40,6 +43,7 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   // Count the total number of top-level posts (threads) i.e., threads that are not comments.
   const totalPostsCount = await Thread.countDocuments({
     parentId: { $in: [null, undefined] },
+    community: null,
   }); // Get the total count of posts
 
   const posts = await postsQuery.exec();
