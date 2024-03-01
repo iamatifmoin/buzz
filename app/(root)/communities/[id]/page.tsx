@@ -94,6 +94,7 @@ async function Page({ params }: { params: { id: string } }) {
                     personType="User"
                     btnText="View"
                     isAdmin={isAdmin}
+                    loggedInUserId={user.id}
                   />
                 ))
               ) : (

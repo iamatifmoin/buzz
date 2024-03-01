@@ -1,5 +1,11 @@
 "use server";
 
+const { Clerk } = require("@clerk/clerk-sdk-node");
+
+// Initialize Clerk client with your API key
+const clerkClient = new Clerk({
+  apiKey: process.env.CLERK_SECRET_KEY,
+});
 import { FilterQuery, SortOrder } from "mongoose";
 
 import Community from "../models/community.model";
@@ -337,10 +343,38 @@ export async function rejectCommunityRequest(
       { id: communityId },
       { $pull: { requests: { $in: user._id } } }
     );
-    const comm = await Community.findOne({ id: communityId });
-    console.log(comm);
     return true;
-    // } else return false;
+  } catch (error) {
+    console.error("Error rejecting join request: ", error);
+    throw false;
+  }
+}
+
+export async function acceptCommunityRequest(
+  communityId: string,
+  userId: string,
+  loggedInUserId: string
+) {
+  try {
+    connectToDB();
+    const clerkUser = await clerkClient.users.getUser(userId);
+    const emailAddress = clerkUser.emailAddresses[0].emailAddress;
+
+    await clerkClient.organizations.createOrganizationInvitation({
+      organizationId: communityId,
+      emailAddress: emailAddress,
+      inviterUserId: loggedInUserId,
+      role: "org:member",
+      redirectUrl: "https://projectbuzz.vercel.app/onboarding",
+    });
+    const user = await User.findOne({ id: userId });
+
+    await Community.updateOne(
+      { id: communityId },
+      { $pull: { requests: { $in: user._id } } }
+    );
+
+    return true;
   } catch (error) {
     console.error("Error sending join request: ", error);
     throw false;

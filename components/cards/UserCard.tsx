@@ -16,6 +16,7 @@ interface Props {
   personType: string;
   btnText: string;
   isAdmin: boolean;
+  loggedInUserId: string;
 }
 
 function UserCard({
@@ -27,10 +28,10 @@ function UserCard({
   personType,
   btnText,
   isAdmin,
+  loggedInUserId,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
-
   const isCommunity = personType === "Community";
   const communityId = pathname.split("/").pop();
 
@@ -80,7 +81,13 @@ function UserCard({
             {btnText}
           </Button>
 
-          {isAdmin && <AllowAccess communityId={communityId} userId={id} />}
+          {isAdmin && (
+            <AllowAccess
+              communityId={communityId}
+              userId={id}
+              loggedInUserId={loggedInUserId}
+            />
+          )}
         </>
       )}
     </article>
