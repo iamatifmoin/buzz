@@ -181,7 +181,7 @@ function PostThread({ userId }: Props) {
                   // singleLine
                   // value={value}
                   // onChange={onChange}
-                  placeholder={"Mention people using '@'"}
+                  placeholder={"Write your caption (mention people using '@')"}
                   a11ySuggestionsListLabel={"Suggested mentions"}
                   style={defaultStyle}
                   {...field}
