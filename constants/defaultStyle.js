@@ -1,6 +1,7 @@
 export default {
   control: {
-    backgroundColor: "#fff",
+    backgroundColor: "black",
+    color: "white",
     fontSize: 14,
     fontWeight: "normal",
   },
